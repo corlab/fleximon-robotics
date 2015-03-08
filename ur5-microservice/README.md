@@ -14,10 +14,16 @@ Dependencies:
 
 Preconditions:
 
-The rst converter library plugin(s) need to be configured to execute the examples. Exemplary entry in <pre>rsb.conf</pre>:
+The rst converter library plugin(s) need to be configured to execute the examples. Exemplary rsb configuration entry:
 
 <pre>
 [plugins.cpp]
 path = /usr/local/lib/rsb0.11/plugins
 load = rsbrstconvertersstable
 </pre>
+
+Installed executables are (currently):
+
+* rsb-ur5-microservice (provides the actual microservices)
+* rsb-ur5-microservice-client (minimal test client)
+
