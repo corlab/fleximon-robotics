@@ -1,0 +1,20 @@
+IF(NOT ESSENTIALS_CONFIG_PROCESSED)
+    SET(ESSENTIALS_CONFIG_PROCESSED TRUE)
+
+    GET_FILENAME_COMPONENT(ESSENTIALS_CONFIG_DIR "${CMAKE_CURRENT_LIST_FILE}" PATH)
+    
+    IF(EXISTS "${ESSENTIALS_CONFIG_DIR}/CMakeCache.txt")
+        INCLUDE("${ESSENTIALS_CONFIG_DIR}/build-system-essentials-build-tree-settings.cmake")
+    ELSE()
+
+        SET(ESSENTIALS_INCLUDE_DIRS "${ESSENTIALS_CONFIG_DIR}/../../include")
+        SET(ESSENTIALS_RUNTIME_LIBRARY_DIRS "${ESSENTIALS_CONFIG_DIR}/../../bin")
+    
+    ENDIF()
+    
+    # Expose the library as an imported target (from the point of view# of the
+    # downstream project)
+    INCLUDE("${ESSENTIALS_CONFIG_DIR}/@EXPORT_NAME@.cmake")
+    SET(ESSENTIALS_LIBRARIES @LIBRARY_NAME@)
+    
+ENDIF()
