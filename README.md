@@ -1,5 +1,4 @@
 Fleximon_Robot_UR
 =================
 
-Robot program for FlexiMon 
-Ordner UR5 enthält weitere Dokumente
+* ur5_microservice contains rsb ur5 interface with exposed base functions 
