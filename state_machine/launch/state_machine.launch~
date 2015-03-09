@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<launch>
+
+	<!-- upload application configuration to parameter server -->
+	<rosparam command="load" ns="/application_goals" file="$(find state_machine)/goal/application_goals.yaml"/>
+
+	<!-- start pick and place application -->
+	<node pkg="state_machine" type="ur5_state_machine.py" name="ur5_state_machine" output="screen"/>
+</launch>

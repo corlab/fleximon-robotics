@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+	<xacro:macro name="sauggreifer4x" params="parent name *origin">
+
+		<joint name="${name}sauggreifer4x_joint" type="fixed" >
+			<insert_block name="origin" />
+			<parent link="${parent}" />
+			<child link="${name}sauggreifer4x_link" />
+		</joint>
+
+		<link name="${name}sauggreifer4x_link">
+		  <visual>
+		    <geometry>
+		      <mesh filename="package://iml_pick_in_bin_data/data/sauggreifer4x.dae"/>
+		    </geometry>
+		    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		  </visual>
+		  <collision>
+		    <geometry>
+		      <box size="0.04 0.04 0.125"/>
+		    </geometry>
+		    <origin rpy="0.0 0.0 0.0" xyz="0.04 0.04 0.0"/>
+		  </collision>
+		  <inertial>
+		    <mass value="100.0"/>
+		    <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		  </inertial>
+		</link>
+
+	</xacro:macro>
+
+</robot>

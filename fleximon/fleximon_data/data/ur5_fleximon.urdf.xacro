@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       name="ur5_fleximon" >
+
+  <!-- MODELS -->
+
+	<!-- robot model -->
+	<xacro:include filename="$(find ur_description)/urdf/ur5.urdf.xacro" />
+
+	<!-- environment model -->
+	<xacro:include filename="fleximon.urdf.xacro" />
+
+	<!-- environment model -->
+	<xacro:include filename="magazin.urdf.xacro" />
+
+	<!-- environment model -->
+	<!--xacro:include filename="werkstuecktraeger.urdf.xacro" /-->
+
+	<!-- AFAG gripper model -->
+	<xacro:include filename="afag_gripper.urdf.xacro" />
+
+  <!-- CALIBRATION -->
+	<!-- robot calibration | position of the robot relative to base link -->	
+	<property name="arm_x" value="0.130"/>
+	<property name="arm_y" value="0.530"/>
+	<property name="arm_z" value="0.01"/>
+	<property name="arm_roll" value="0.0"/>
+	<property name="arm_pitch" value="0.0"/>
+	<property name="arm_yaw" value="-0.785"/>
+	<property name="arm_prefix" value="arm_" />
+
+	<!-- composition of the robot -->
+	<link name="base_link">
+		<origin xyz="0 0 0" rpy="0 0 0" />
+	</link>
+
+	<!-- Robot UR5 -->
+	<xacro:ur5_robot prefix="${arm_prefix}" joint_limited="false">
+	</xacro:ur5_robot>
+
+	<joint name="${arm_prefix}base_joint" type="fixed" >
+		<origin xyz="${arm_x} ${arm_y} ${arm_z}" rpy="${arm_roll} ${arm_pitch} ${arm_yaw}" />
+		<parent link="base_link" />
+		<child link="${arm_prefix}base_link" />
+	</joint>
+
+	<!-- Fleximon Cell -->
+	<xacro:fleximon name="fleximon_cell" parent="base_link">
+    		<origin xyz="0 0 0" rpy="0 0 0" />
+  	</xacro:fleximon>
+
+	<!-- Magazin -->
+	<!--xacro:magazin name="" parent="base_link"-->
+    		<!--origin xyz="0 0 0" rpy="0 0 0" /-->
+  	<!--/xacro:magazin-->
+
+<!-- Werkstuecktraeger -->
+	<!--xacro:werkstuecktraeger name="" parent="base_link"-->
+    		<!--origin xyz="0 0 0" rpy="0 0 0" /-->
+  	<!--/xacro:werkstuecktraeger-->
+
+	<!-- AFAG gripper position of the mesa camera relative to base link -->
+	<xacro:afag_gripper name="${arm_prefix}" parent="${arm_prefix}ee_link">
+    		<!-- gripper offset -->
+				<origin xyz="0 0 0" rpy="0 0 0" />
+		</xacro:afag_gripper>
+
+	<joint name="{arm_prefix}ee_joint" type="fixed" >
+			<origin xyz="0 0 0" rpy="0 0 0" />
+			<parent link="${arm_prefix}ee_link" />
+			<child link="afag_gripper_link" />
+	</joint>
+
+	<link name="afag_gripper_link">
+		<origin xyz="0 0 0" rpy="0 0 0" />
+	</link>
+
+</robot>

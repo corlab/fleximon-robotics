@@ -1,0 +1,8 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: fleximon_data
+    relative_path: data/ur5_fleximon.urdf.xacro
+  SRDF:
+    relative_path: config/ur5_fleximon.srdf
+  CONFIG:
+    generated_timestamp: 1425602132

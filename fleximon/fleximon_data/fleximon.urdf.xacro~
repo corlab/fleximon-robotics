@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://ros.org/wiki/xacro">
+
+	<xacro:macro name="fleximon" params="parent name *origin">
+
+		<joint name="${name}_joint" type="fixed" >
+			<insert_block name="origin" />
+			<parent link="${parent}" />
+			<child link="${name}_link" />
+		</joint>
+		<link name="${name}_link">
+		  <visual>
+		    <geometry>
+		      <mesh filename="package://iml_pick_in_bin_data/data/FlexiMon.dae"/>
+		    </geometry>
+		    <origin rpy="0.0 0.0 0.0" xyz="0.48 0.48 -0.81"/>
+		  </visual>
+		  <collision>
+		    <geometry>
+		      <mesh filename="package://iml_pick_in_bin_data/data/FlexiMon.dae"/>
+		    </geometry>
+		    <origin rpy="0.0 0.0 0.0" xyz="0.48 0.48 -0.81"/>
+		  </collision>
+		  <inertial>
+		    <mass value="100.0"/>
+		    <inertia ixx="1.0" ixy="0.0" ixz="0.0" iyy="1.0" iyz="0.0" izz="1.0"/>
+		    <origin rpy="0.0 0.0 0.0" xyz="0.0 0.0 0.0"/>
+		  </inertial>
+		</link>
+
+	</xacro:macro>
+
+</robot>

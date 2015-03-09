@@ -1,0 +1,12 @@
+<package>
+  <description brief="iml_pick_in_bin_data">
+
+     iml_pick_in_bin_data
+
+  </description>
+  <author>Dennis Luensch</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url></url>
+
+</package>
