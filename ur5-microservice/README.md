@@ -26,7 +26,7 @@ The rst converter library plugin(s) need to be configured to execute the example
 
 <pre>
 [plugins.cpp]
-path = /usr/local/lib/rsb0.11/plugins
+path = /usr/lib/rsb0.11/plugins
 load = rsbrstconvertersstable
 </pre>
 
