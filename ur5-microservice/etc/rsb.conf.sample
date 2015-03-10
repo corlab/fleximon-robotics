@@ -1,0 +1,11 @@
+[introspection]
+enabled = 1
+[plugins.cpp]
+load = rsbrstconvertersstable:rsbspread:rsbintrospection
+[transport.inprocess]
+enabled = 0
+[transport.socket]
+enabled = 0
+[transport.spread]
+enabled = 1
+port = 4803
