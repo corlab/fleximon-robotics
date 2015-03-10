@@ -11,6 +11,9 @@ cmake .. -DCMAKE_INSTALL_PREFIX=/usr/local
 Dependencies:
 
 * rs{b|c|t}-0.11
+* librstconverters-humavips0.11
+
+These can be installed via binary packages from CoR-Lab's Debian package server.
 
 Preconditions:
 
