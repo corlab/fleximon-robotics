@@ -104,6 +104,7 @@ include_directories(
 
 ## Declare a cpp executable
 add_executable(marker_display_node src/marker_display_node.cpp)
+add_executable(magazin_frames src/magazin_frames.cpp)
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -111,6 +112,10 @@ add_executable(marker_display_node src/marker_display_node.cpp)
 
 ## Specify libraries to link a library or executable target against
  target_link_libraries(marker_display_node
+   ${catkin_LIBRARIES}
+ )
+
+ target_link_libraries(magazin_frames
    ${catkin_LIBRARIES}
  )
 

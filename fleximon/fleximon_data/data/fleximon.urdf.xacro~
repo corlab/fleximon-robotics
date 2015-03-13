@@ -20,7 +20,7 @@
 		  </visual>
 		  <collision>
 		    <geometry>
-		      <mesh filename="package://fleximon_data/data/FlexiMon_Kollisionsmodell.dae"/>
+		      <mesh filename="package://fleximon_data/data/FlexiMon.dae"/>
 		    </geometry>
 		    <origin rpy="0.0 0.0 0.0" xyz="0.48 0.48 -0.81"/>
 		  </collision>
