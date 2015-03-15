@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 
 using namespace visualization_msgs;
 
-double p_x=0.0 ,p_y=-0.095,p_z=0.0;
+double p_x=0.0 ,p_y=-0.0475,p_z=0.0;
 
 // %Tag(vars)%
 boost::shared_ptr<interactive_markers::InteractiveMarkerServer> server;

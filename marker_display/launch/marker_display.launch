@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <launch>
   <node name="marker_display_node" pkg="marker_display" type="marker_display_node" respawn="true" output="screen" />
-		<rosparam command="load" ns="" file="$(find marker_display)/launch/param.yaml"/>
-
+	<rosparam command="load" ns="" file="$(find marker_display)/launch/param.yaml"/>
 </launch>

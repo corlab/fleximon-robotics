@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 
 using namespace visualization_msgs;
 
-double p_x=0.391 ,p_y=-0.095,p_z=0;
+double p_x=0.0 ,p_y=-0.095,p_z=0.0;
 
 // %Tag(vars)%
 boost::shared_ptr<interactive_markers::InteractiveMarkerServer> server;
@@ -157,26 +157,6 @@ void frameCallback(const ros::TimerEvent&)
   ros::Time time = ros::Time::now();
 
 // %Transformation calculation for grasping frame
-//  t1.setRotation(tf::createQuaternionFromRPY(0,-1.57,0));
-//  t2.setRotation(tf::createQuaternionFromRPY(0,0,.41));
-//  t3.setRotation(tf::createQuaternionFromRPY(0,0,3.14));
-
-//  t_temp.mult(t1,t2);
-//  t.mult(t_temp,t3);
-//  t.setOrigin(tf::Vector3(0.10, 0.246, 0.173));
-//  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "grasp_frame"));
-
-//  t.setOrigin(tf::Vector3(p_x, p_y, p_z));
-//  t.setRotation(tf::createQuaternionFromRPY(0.0, 0.0, 0.0));
-//  br.sendTransform(tf::StampedTransform(t, time, "base_link", "magazin_frame"));
-
-// %Transformation calculation for grasping frame
-//  t1.setRotation(tf::createQuaternionFromRPY(3.14,0,0));
-//  t2.setRotation(tf::createQuaternionFromRPY(0,-1.57,0));
-//  t3.setRotation(tf::createQuaternionFromRPY(0,0,0.436332));
-//  t_temp.mult(t1,t2);
-//  t.mult(t_temp,t3);
-
   t1.setRotation(tf::createQuaternionFromRPY(3.14, 0, 0));
   t2.setRotation(tf::createQuaternionFromRPY(0, -1.57, 0));
   t3.setRotation(tf::createQuaternionFromRPY(0, 0, 0.436332));
@@ -185,8 +165,74 @@ void frameCallback(const ros::TimerEvent&)
   t_temp.mult(t1,t2);
   t_temp2.mult(t_temp,t3);
   t.mult(t_temp2,t4);
-  t.setOrigin(tf::Vector3(0.16275, 0.35957, 0.13617));
-  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "grasp_frame"));
+
+
+  t.setOrigin(tf::Vector3(0.05605, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m3_a"));
+
+  t.setOrigin(tf::Vector3(0.10475, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m3_b"));
+
+  t.setOrigin(tf::Vector3(0.15325, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m3_c"));
+
+  t.setOrigin(tf::Vector3(0.20175, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m3_d"));
+
+  // ***************************
+
+  t.setOrigin(tf::Vector3(0.28705 , 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m2_a"));
+
+  t.setOrigin(tf::Vector3(0.33575, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m2_b"));
+
+  t.setOrigin(tf::Vector3(0.38425, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m2_c"));
+
+  t.setOrigin(tf::Vector3(0.43275, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m2_d"));
+
+  // ***************************
+
+  t.setOrigin(tf::Vector3(0.51405 , 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m5_a"));
+
+  t.setOrigin(tf::Vector3(0.56275, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m5_b"));
+
+  t.setOrigin(tf::Vector3(0.61125, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m5_c"));
+
+  t.setOrigin(tf::Vector3(0.65975, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m5_d"));
+
+
+  // ***************************
+
+  t.setOrigin(tf::Vector3(0.74705 , 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m1_a"));
+
+  t.setOrigin(tf::Vector3(0.79575, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m1_b"));
+
+  t.setOrigin(tf::Vector3(0.84425, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m1_c"));
+
+  t.setOrigin(tf::Vector3(0.89275, 0.35957, 0.13617));
+  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m1_d"));
+
+
+
+
+//  t.setOrigin(tf::Vector3(0.11425, 0.35957, 0.13617));
+//  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "grasp_frame2"));
+
+//  t.setOrigin(tf::Vector3(0.06575, 0.35957, 0.13617));
+//  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "grasp_frame3"));
+
+//  t.setOrigin(tf::Vector3(0.01705, 0.35957, 0.13617));
+//  br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "grasp_frame4"));
 
   t.setOrigin(tf::Vector3(p_x, p_y, p_z));
   t.setRotation(tf::createQuaternionFromRPY(0.0, 0.0, 0.0));

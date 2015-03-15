@@ -7,7 +7,7 @@ project(marker_display)
 find_package(catkin REQUIRED COMPONENTS
   interactive_markers
   roscpp
-	tf
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -118,6 +118,7 @@ add_executable(magazin_frames src/magazin_frames.cpp)
  target_link_libraries(magazin_frames
    ${catkin_LIBRARIES}
  )
+
 
 #############
 ## Install ##

@@ -8,12 +8,6 @@
 #ifndef UR5Move_H
 #define UR5Move_H
 
-#define RESET 11 // Reset-Zustand
-#define MAX_TP 3 // maximal zulaessiger Abstand zum Tisch (oberer Rand)
-#define NEXT_TP 0.20 // Abstand zwischen den Positionen vor dem Tisch
-#define TABLE_DIS 0.97 // Bis zu dieser Entfernung faehrt der Youbot an den Tisch
-#define DRIVE_OFF_DIS 0.70 // Diese Strecke faehrt der Youbot rueckwaerts um nicht anzustossen
-
 #define goalPosTol 0.005
 #define goalOrientTol 0.05
 
@@ -24,9 +18,12 @@
 #define PI 3.14159265
 
 // Gripper
-#define GRIPPERdist 0.256
-#define GP_DIS 0.256 // Distance Gripper - Target
+#define GP_DIS 0.1 // Distance Gripper - Target, Grip = 0.256
 #define GP_LEN 0.104 // Length ur5 arm_ee joint - Gripper Fingers
+
+// Anfahren Magazin
+#define MG_Z 0.25       // Z-Offset an Magazin
+#define MG_ANGLE 25     // Neigungswinkel Magazin in Grad
 
 // Werkstuecktraeger - Charge Carrier
 #define WT_X 0.67375
@@ -50,6 +47,8 @@
 // Transform
 #include <tf/transform_listener.h>
 
+#include <string.h>
+
 
 
 class UR5Move
@@ -59,36 +58,12 @@ public:
     void mainNodeLoop();
 private:  
     ros::NodeHandle nH;
-    ros::Publisher statusPub, velPub;
-    ros::Subscriber gripStatusSub, diffPosSub, nextStepSub, driveSub, scanSub;
-    ros::ServiceClient clientGrip, clientDrop, clientCancel;
-    ros::ServiceServer serverC;
     ros::Timer timer;
 
     int state;
-    std::string objectName;
-    std::string containerName;
-    int currTP;
-    double midDistance;
-    bool driveManually2Start;
-    bool driveManually2End;
-    bool nextStep;
-    bool gotCmd;
-    bool gotGripStatus;
-    bool gotObject;
-    bool noObject;
-    bool gotPoint;
-    bool gotDropStatus;
-    bool gotBox;
-    bool noBox;
-    bool timeout;
-    bool usedDiffPoint;
 
-    geometry_msgs::Pose startPos;
-    geometry_msgs::Point diffPos;
-    geometry_msgs::Pose endPos;
-    geometry_msgs::Pose tablePos[MAX_TP];
     std::string referenceFrame,setPlanner,destinationFrame,graspFrame;
+
 
     // Transform
     tf::TransformListener listener;
@@ -96,6 +71,7 @@ private:
     geometry_msgs::PointStamped transOut;
 
     void moveInit();
+    void moveInit2();
     void moveMagazine();
     void rotateEndEffector();
     void moveJointPregrasp();
