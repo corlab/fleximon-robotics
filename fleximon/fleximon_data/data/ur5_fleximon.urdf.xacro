@@ -24,8 +24,8 @@
 
   <!-- CALIBRATION -->
 	<!-- robot calibration | position of the robot relative to base link -->	
-	<property name="arm_x" value="0.170"/>
-	<property name="arm_y" value="0.5825"/>
+	<property name="arm_x" value="0.3"/>
+	<property name="arm_y" value="0.6875"/>
 	<property name="arm_z" value="0.01"/>
 	<property name="arm_roll" value="0.0"/>
 	<property name="arm_pitch" value="0.0"/>
@@ -53,9 +53,9 @@
   	</xacro:fleximon>
 
 	<!-- Magazin -->
-	<!--xacro:magazin name="" parent="base_link"-->
-    		<!--origin xyz="0 0 0" rpy="0 0 0" /-->
-  	<!--/xacro:magazin-->
+	<xacro:magazin name="" parent="base_link">
+    		<origin xyz="0 0 0" rpy="0 0 0" />
+  	</xacro:magazin>
 
 <!-- Werkstuecktraeger -->
 	<!--xacro:werkstuecktraeger name="" parent="base_link"-->
