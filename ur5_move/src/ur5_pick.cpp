@@ -13,7 +13,7 @@ UR5Move::UR5Move()
     referenceFrame = "/base_link";
     setPlanner ="PRMkConfigDefault";
     destinationFrame = "/base_link";
-    graspFrame = "/m3_a";
+    graspFrame = "/m1_d";
 
     state = 11;
 }
@@ -75,11 +75,18 @@ void UR5Move::mainNodeLoop()
 
             break;
 
-        case 6: // Move To Init
-                moveInit2();
-
-                ROS_INFO("######### Move to Init! #########");
-                state++;
+        case 6: // Move To Init 2
+            if(graspFrame == "/m3_a" || graspFrame == "/m3_b"){
+               ROS_INFO("######### Move to Init2! #########");
+               moveInit2();
+               state++;
+            }
+            else if(graspFrame == "/m3_c" || graspFrame == "/m3_d"){
+               ROS_INFO("######### Move to Init2! #########");
+               moveInit2();
+               state++;
+            }
+            else state++;
 
             break;
         case 7: // Move To Init

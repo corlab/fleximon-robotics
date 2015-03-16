@@ -18,7 +18,7 @@
 #define PI 3.14159265
 
 // Gripper
-#define GP_DIS 0.1 // Distance Gripper - Target, Grip = 0.256
+#define GP_DIS 0.15 // Distance Gripper - Target, Grip = 0.256
 #define GP_LEN 0.104 // Length ur5 arm_ee joint - Gripper Fingers
 
 // Anfahren Magazin
