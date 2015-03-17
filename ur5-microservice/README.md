@@ -35,3 +35,11 @@ Installed executables are (currently):
 * rsb-ur5-microservice (provides the actual microservices)
 * rsb-ur5-microservice-client (minimal test client)
 
+Network RSB Logger:
+<pre>
+rsb-loggercl0.11 -s monitor/scope socket:
+rsb-introspectcl0.11 -s monitor/object-tree socket:
+</pre>
+<pre>
+sudo apt-get install rsb-tools-cl0.11
+</pre>
