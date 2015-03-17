@@ -1,11 +1,14 @@
 [introspection]
 enabled = 1
 [plugins.cpp]
+path = /usr/lib/rsb0.11/plugins
 load = rsbrstconvertersstable:rsbspread:rsbintrospection
 [transport.inprocess]
 enabled = 0
 [transport.socket]
-enabled = 0
-[transport.spread]
 enabled = 1
+server = 0
+host = 192.168.1.1
+[transport.spread]
+enabled = 0
 port = 4803
