@@ -77,8 +77,8 @@ UR5RSBAdapter::UR5RSBAdapter(const std::string& scope) {
     server = factory.createLocalServer(scope);
 
     // Register method with name and implementing callback object.
-    server->registerMethod("move", LocalServer::CallbackPtr(new MoveCallback()));
-    server->registerMethod("moveTo", LocalServer::CallbackPtr(new MoveToCallback()));
+    server->registerMethod("moveRobot", LocalServer::CallbackPtr(new MoveCallback()));
+    server->registerMethod("moveToRobot", LocalServer::CallbackPtr(new MoveToCallback()));
 }
 
 UR5RSBAdapter::~UR5RSBAdapter() {
