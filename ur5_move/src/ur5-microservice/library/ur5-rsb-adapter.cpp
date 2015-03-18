@@ -35,6 +35,25 @@
 #include <iostream>
 #include <string>
 
+// ROS
+#include <ros/ros.h>
+#include <math.h>
+// MoveIt!
+#include <moveit/move_group_interface/move_group.h>
+#include <moveit/robot_model_loader/robot_model_loader.h>
+#include <moveit/robot_model/robot_model.h>
+#include <moveit/robot_state/robot_state.h>
+#include <moveit_msgs/ExecuteKnownTrajectory.h>
+#include <moveit/robot_trajectory/robot_trajectory.h>
+#include <moveit/trajectory_processing/iterative_time_parameterization.h>
+#include <moveit/planning_interface/planning_interface.h>
+#include <moveit/planning_scene/planning_scene.h>
+
+// Tolerances
+#define goalPosTol 0.001
+#define goalOrientTol 0.01
+
+
 using namespace std;
 using namespace rsb;
 using namespace rsb::patterns;
@@ -53,7 +72,9 @@ public:
                                         boost::shared_ptr<rst::geometry::Pose> input) {
     	std::cout << "MoveCS method called with rst::geometry::pose: Translation (x,y,z): " << input->translation().x() << "," << input->translation().y() << "," << input->translation().z() << " ";
     	std::cout << " Rotation (qx,qy,qz,qw): " << input->rotation().qx() << "," << input->rotation().qy() << "," << input->rotation().qz() << "," << input->rotation().qw() << std::endl;
+
     }
+
 };
 
 /**
@@ -63,10 +84,56 @@ class MoveCallback: public LocalServer::Callback<rst::kinematics::JointAngles, v
     void call(const std::string& /*methodName*/,
     		  boost::shared_ptr<rst::kinematics::JointAngles> input) {
         std::cout << "MoveJS method called with rst:kinematics:JointAngles vector in rad: ";
+
         for (int i=0; i<input->angles_size(); i++) {
         	std::cout << " " << input->angles(i) << " ";
         }
         std::cout << std::endl;
+
+
+      // ##### NACHFOLGEND CODE DEN ICH VERWENDEN MÖCHTE #####
+
+      // start a background "spinner", so our node can process ROS messages
+      //  - this lets us know when the move is completed
+      ros::AsyncSpinner spinner(1);
+      spinner.start();
+
+      // connecting to move group
+      move_group_interface::MoveGroup group("ur5_manipulator");
+
+      // set planner from OMPL lib
+      std::string setPlanner ="PRMkConfigDefault";
+      group.setPlannerId(setPlanner);
+
+      // print information about the endeffector
+      std::string ee = group.getEndEffectorLink();
+      ROS_INFO("Endeffector Frame %s",ee.c_str());
+      ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
+
+      // allow replanning to increase the odds of a solution
+      group.allowReplanning(true);
+      group.setPlanningTime(5);
+      // set the refrance frame
+      std::string referenceFrame = "/base_link";
+      group.setPoseReferenceFrame(referenceFrame);
+
+      // allow some position (meters) and orientation (radians) tolerances
+      group.setGoalPositionTolerance(goalPosTol);
+      group.setGoalOrientationTolerance(goalOrientTol);
+
+      // set joint angles
+      group.setJointValueTarget("arm_shoulder_pan_joint", 0.785);
+      group.setJointValueTarget("arm_shoulder_lift_joint", -1.57);
+      group.setJointValueTarget("arm_elbow_joint", 1.57);
+      group.setJointValueTarget("arm_wrist_1_joint", -1.57);
+      group.setJointValueTarget("arm_wrist_2_joint", -1.57);
+      group.setJointValueTarget("arm_wrist_3_joint", 0.785);
+
+      // Joint value target execution
+      group.move();
+
+      // ##### ENDE VON CODE DEN ICH VERWENDEN MÖCHTE #####
+
     }
 };
 
