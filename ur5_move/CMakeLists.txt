@@ -17,7 +17,9 @@ find_package(catkin REQUIRED COMPONENTS
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
-
+find_package(RSB 0.11 REQUIRED)
+find_package(RSC 0.11 REQUIRED)
+find_package(RST 0.11 REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -75,6 +77,7 @@ find_package(catkin REQUIRED COMPONENTS
 #   std_msgs
 # )
 
+
 ###################################
 ## catkin specific configuration ##
 ###################################
@@ -102,10 +105,40 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+include_directories(BEFORE SYSTEM
+${RSB_INCLUDE_DIRS} ${RST_INCLUDE_DIRS}
+)
+ADD_DEFINITIONS(${RST_CFLAGS})
+
 ## Declare a cpp library
 # add_library(ur5_move
 #   src/${PROJECT_NAME}/ur5_move.cpp
 # )
+
+
+# mark-start::define-target-names
+SET(LIBRARY_NAME "ur5-microservice")
+SET(BINARY_NAME_SERVICE "rsb-ur5-microservice")
+SET(BINARY_NAME_CLIENT "rsb-ur5-microservice-client")
+SET(EXPORT_NAME "ur5-microservice-exports")
+
+# mark-start::declare-library
+SET(LIBRARY_SOURCES "src/ur5-microservice/library/ur5-rsb-adapter.cpp")
+SET(LIBRARY_HEADERS "src/ur5-microservice/library/ur5-rsb-adapter.h")
+ADD_LIBRARY(${LIBRARY_NAME} SHARED ${LIBRARY_SOURCES} ${LIBRARY_HEADERS})
+#SET_TARGET_PROPERTIES(${LIBRARY_NAME} PROPERTIES VERSION ${SO_VERSION})
+TARGET_LINK_LIBRARIES(${LIBRARY_NAME} ${RSC_LIBRARIES} ${RSB_LIBRARIES} ${RST_LIBRARIES})
+# mark-end::declare-library
+
+# mark-start::declare-executable
+ADD_EXECUTABLE(${BINARY_NAME_SERVICE} "src/ur5-microservice/ur5-microservice.cpp")
+TARGET_LINK_LIBRARIES(${BINARY_NAME_SERVICE} ${LIBRARY_NAME} ${RSB_LIBRARIES} ${RST_LIBRARIES})
+# mark-end::declare-executable
+
+# mark-start::declare-executable
+ADD_EXECUTABLE(${BINARY_NAME_CLIENT} "src/ur5-microservice/ur5-microservice-client.cpp")
+TARGET_LINK_LIBRARIES(${BINARY_NAME_CLIENT} ${LIBRARY_NAME} ${RSB_LIBRARIES} ${RST_LIBRARIES})
+# mark-end::declare-executable
 
 ## Declare a cpp executable
  add_executable(ur5_pick src/ur5_pick.cpp)
