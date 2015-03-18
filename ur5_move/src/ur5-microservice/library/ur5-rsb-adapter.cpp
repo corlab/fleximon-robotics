@@ -72,7 +72,48 @@ public:
                                         boost::shared_ptr<rst::geometry::Pose> input) {
     	std::cout << "MoveCS method called with rst::geometry::pose: Translation (x,y,z): " << input->translation().x() << "," << input->translation().y() << "," << input->translation().z() << " ";
     	std::cout << " Rotation (qx,qy,qz,qw): " << input->rotation().qx() << "," << input->rotation().qy() << "," << input->rotation().qz() << "," << input->rotation().qw() << std::endl;
+        moveInit();
+    }
 
+    void moveInit()
+    {
+        string referenceFrame = "/base_link";
+        string setPlanner ="PRMkConfigDefault";
+        // start a background "spinner", so our node can process ROS messages
+        //  - this lets us know when the move is completed
+        ros::AsyncSpinner spinner(1);
+        spinner.start();
+//        ros::spin();
+
+        // connecting to move group
+        move_group_interface::MoveGroup group("ur5_manipulator");
+
+        // set planner from OMPL lib
+        group.setPlannerId(setPlanner);
+
+        // print information about the endeffector
+        std::string ee = group.getEndEffectorLink();
+        ROS_INFO("Endeffector Frame %s",ee.c_str());
+        ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
+
+        // allow replanning to increase the odds of a solution
+        group.allowReplanning(true);
+        group.setPlanningTime(5);
+        // set the refrance frame
+        group.setPoseReferenceFrame(referenceFrame);
+
+        // allow some position (meters) and orientation (radians) tolerances
+        group.setGoalPositionTolerance(goalPosTol);
+        group.setGoalOrientationTolerance(goalOrientTol);
+
+        group.setJointValueTarget("arm_shoulder_pan_joint", 0.785);
+        group.setJointValueTarget("arm_shoulder_lift_joint", -1.57);
+        group.setJointValueTarget("arm_elbow_joint", 1.57);
+        group.setJointValueTarget("arm_wrist_1_joint", -1.57);
+        group.setJointValueTarget("arm_wrist_2_joint", -1.57);
+        group.setJointValueTarget("arm_wrist_3_joint", 0.785);
+        // Joint value target execution
+        group.move();
     }
 
 };
@@ -84,57 +125,52 @@ class MoveCallback: public LocalServer::Callback<rst::kinematics::JointAngles, v
     void call(const std::string& /*methodName*/,
     		  boost::shared_ptr<rst::kinematics::JointAngles> input) {
         std::cout << "MoveJS method called with rst:kinematics:JointAngles vector in rad: ";
-
+        double values[5];
         for (int i=0; i<input->angles_size(); i++) {
         	std::cout << " " << input->angles(i) << " ";
+            values[i] = input->angles(i);
         }
         std::cout << std::endl;
 
+        string referenceFrame = "/base_link";
+        string setPlanner ="PRMkConfigDefault";
+        // start a background "spinner", so our node can process ROS messages
+        //  - this lets us know when the move is completed
+        ros::AsyncSpinner spinner(1);
+        spinner.start();
 
-      // ##### NACHFOLGEND CODE DEN ICH VERWENDEN MÖCHTE #####
+        // connecting to move group
+        move_group_interface::MoveGroup group("ur5_manipulator");
 
-      // start a background "spinner", so our node can process ROS messages
-      //  - this lets us know when the move is completed
-      ros::AsyncSpinner spinner(1);
-      spinner.start();
+        // set planner from OMPL lib
+        group.setPlannerId(setPlanner);
 
-      // connecting to move group
-      move_group_interface::MoveGroup group("ur5_manipulator");
+        // print information about the endeffector
+        std::string ee = group.getEndEffectorLink();
+        ROS_INFO("Endeffector Frame %s",ee.c_str());
+        ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
 
-      // set planner from OMPL lib
-      std::string setPlanner ="PRMkConfigDefault";
-      group.setPlannerId(setPlanner);
+        // allow replanning to increase the odds of a solution
+        group.allowReplanning(true);
+        group.setPlanningTime(5);
+        // set the refrance frame
+        group.setPoseReferenceFrame(referenceFrame);
 
-      // print information about the endeffector
-      std::string ee = group.getEndEffectorLink();
-      ROS_INFO("Endeffector Frame %s",ee.c_str());
-      ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
+        // allow some position (meters) and orientation (radians) tolerances
+        group.setGoalPositionTolerance(goalPosTol);
+        group.setGoalOrientationTolerance(goalOrientTol);
 
-      // allow replanning to increase the odds of a solution
-      group.allowReplanning(true);
-      group.setPlanningTime(5);
-      // set the refrance frame
-      std::string referenceFrame = "/base_link";
-      group.setPoseReferenceFrame(referenceFrame);
-
-      // allow some position (meters) and orientation (radians) tolerances
-      group.setGoalPositionTolerance(goalPosTol);
-      group.setGoalOrientationTolerance(goalOrientTol);
-
-      // set joint angles
-      group.setJointValueTarget("arm_shoulder_pan_joint", 0.785);
-      group.setJointValueTarget("arm_shoulder_lift_joint", -1.57);
-      group.setJointValueTarget("arm_elbow_joint", 1.57);
-      group.setJointValueTarget("arm_wrist_1_joint", -1.57);
-      group.setJointValueTarget("arm_wrist_2_joint", -1.57);
-      group.setJointValueTarget("arm_wrist_3_joint", 0.785);
-
-      // Joint value target execution
-      group.move();
-
-      // ##### ENDE VON CODE DEN ICH VERWENDEN MÖCHTE #####
-
+        group.setJointValueTarget("arm_shoulder_pan_joint", values[0]);
+        group.setJointValueTarget("arm_shoulder_lift_joint", values[1]);
+        group.setJointValueTarget("arm_elbow_joint", values[2]);
+        group.setJointValueTarget("arm_wrist_1_joint", values[3]);
+        group.setJointValueTarget("arm_wrist_2_joint", values[4]);
+        group.setJointValueTarget("arm_wrist_3_joint", values[5]);
+        // Joint value target execution
+        group.move();
     }
+
+
 };
 
 UR5RSBAdapter::UR5RSBAdapter(const std::string& scope) {
@@ -144,8 +180,8 @@ UR5RSBAdapter::UR5RSBAdapter(const std::string& scope) {
     server = factory.createLocalServer(scope);
 
     // Register method with name and implementing callback object.
-    server->registerMethod("moveRobot", LocalServer::CallbackPtr(new MoveCallback()));
-    server->registerMethod("moveToRobot", LocalServer::CallbackPtr(new MoveToCallback()));
+    server->registerMethod("moverobot", LocalServer::CallbackPtr(new MoveCallback()));
+    server->registerMethod("movetorobot", LocalServer::CallbackPtr(new MoveToCallback()));
 }
 
 UR5RSBAdapter::~UR5RSBAdapter() {

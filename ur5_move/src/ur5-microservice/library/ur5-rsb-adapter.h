@@ -28,6 +28,7 @@
 
 #include <rsb/patterns/LocalServer.h>
 
+
 namespace ur5_microservice {
 namespace library {
 

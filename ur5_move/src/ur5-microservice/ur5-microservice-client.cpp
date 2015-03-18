@@ -38,6 +38,7 @@ using namespace rst;
 using namespace rsb::patterns;
 
 int main(int /*argc*/, char** /*argv*/) {
+
     // Use the RSB factory to create a RemoteServer instance for the
     // server at scope /example/server.
     Factory& factory = getFactory();
@@ -49,14 +50,14 @@ int main(int /*argc*/, char** /*argv*/) {
     // arguments and return values are defined by the server providing
     // the respective methods and have to be matched in method calls.
     boost::shared_ptr<rst::kinematics::JointAngles> jointAngles(new rst::kinematics::JointAngles);
-    jointAngles->add_angles(1.57);
-    jointAngles->add_angles(0);
+    jointAngles->add_angles( 0.785);
+    jointAngles->add_angles(-1.57);
     jointAngles->add_angles(1.57);
     jointAngles->add_angles(-1.57);
-    jointAngles->add_angles(0);
-    jointAngles->add_angles(1.57);
+    jointAngles->add_angles(-1.57);
+    jointAngles->add_angles(0.785);
 
-    remoteServer->call<std::string>("moveRobot", jointAngles);
+    remoteServer->call<std::string>("moverobot", jointAngles);
     std::cout << "Called move!" << std::endl;
     //std::cout << "Server replied: " << *result << std::endl;
 
@@ -77,7 +78,7 @@ int main(int /*argc*/, char** /*argv*/) {
     pose->mutable_rotation()->set_qz(0);
 
     RemoteServer::DataFuture<std::string> future
-        = remoteServer->callAsync<std::string>("moveToRobot", pose);
+        = remoteServer->callAsync<std::string>("movetorobot", pose);
     std::cout << "Called moveToRobot" << std::endl;
 
     // We could do something else here while the server processes the

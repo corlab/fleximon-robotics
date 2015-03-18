@@ -39,6 +39,9 @@
 
 #include "library/ur5-rsb-adapter.h"
 
+//ROS
+#include <ros/ros.h>
+
 using namespace std;
 using namespace rsb;
 using namespace ur5_microservice::library;
@@ -81,6 +84,9 @@ int main(int argc, char *argv[]) {
 
 	rsc::misc::initSignalWaiter();
 
+    // ROS Init
+    ros::init(argc, argv, "ur5_manipulation");
+
 	// program options
     handleCommandline(argc, argv);
 
@@ -90,6 +96,8 @@ int main(int argc, char *argv[]) {
 
     // wait here so incoming method calls can be processed.
     return rsc::misc::suggestedExitCode(rsc::misc::waitForSignal());
+
+
 
 }
 // mark-end::show-for-parsing
