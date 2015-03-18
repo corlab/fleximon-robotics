@@ -44,7 +44,7 @@ using namespace rsb;
 using namespace ur5_microservice::library;
 namespace po = boost::program_options;
 
-string scope = "/module/ur5";
+string scope = "/fleximon/Module1/ur5";
 int value = 0;
 
 void handleCommandline(int argc, char *argv[]) {
