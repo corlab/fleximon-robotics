@@ -93,16 +93,6 @@ public:
     	std::cout << "MoveCS method called with rst::geometry::pose: Translation (x,y,z): " << input->translation().x() << "," << input->translation().y() << "," << input->translation().z() << " ";
     	std::cout << " Rotation (qx,qy,qz,qw): " << input->rotation().qx() << "," << input->rotation().qy() << "," << input->rotation().qz() << "," << input->rotation().qw() << std::endl;
 
-    }
-/*
-    void moveMagazine(){
-
-        // Transform
-        tf::TransformListener listener;
-        tf::StampedTransform transform;
-        string destinationFrame = "/base_link";
-        string graspFrame = "/grasp_frame";
-
         // connecting to move group
         move_group_interface::MoveGroup group("ur5_manipulator");
 
@@ -127,29 +117,11 @@ public:
         // get the name of the end-effector link
         std::string end_effector_link = group.getEndEffectorLink();
 
-        // Transform listener
-          try {
-              listener.waitForTransform(destinationFrame, graspFrame, ros::Time(0), ros::Duration(5.0));
-              listener.lookupTransform(destinationFrame, graspFrame, ros::Time(0), transform);
-          } catch (tf::TransformException ex) {
-              ROS_ERROR("%s",ex.what());
-          }
-
-        std::cout << transform.getOrigin().x() << "," << transform.getOrigin().y() << "," << transform.getOrigin().z() << "," << std::endl;
-
-
         // plan and execute a trajectory to the goal configuration
-
         // get the current pose so we can add it as a waypoint
         geometry_msgs::PoseStamped start_pose;
         start_pose = group.getCurrentPose(end_effector_link);
         ROS_INFO_STREAM("Start Pose: " << std::endl << start_pose);
-
-
-        // calculate magazin offset
-        double offset_y = 0;
-        offset_y = MG_Z * tan(MG_ANGLE * PI / 180);
-        std::cout << "Magazin Offset_y: " << offset_y << std::endl;
 
         //  Initialize the waypoints list
         std::vector<geometry_msgs::Pose> waypoints;
@@ -167,9 +139,9 @@ public:
 
         // set the next waypoint
         geometry_msgs::Pose cartesian_target;
-        cartesian_target.position.x = transform.getOrigin().x(); //- 0.0045
-        cartesian_target.position.y = transform.getOrigin().y() + offset_y;
-        cartesian_target.position.z = transform.getOrigin().z() + MG_Z;
+        cartesian_target.position.x = input->translation().x();
+        cartesian_target.position.y = input->translation().y();
+        cartesian_target.position.z = input->translation().z();
         cartesian_target.orientation.x = start_pose.pose.orientation.x;
         cartesian_target.orientation.y = start_pose.pose.orientation.y;
         cartesian_target.orientation.z = start_pose.pose.orientation.z;
@@ -186,32 +158,32 @@ public:
                                                          0.0, // jump_threshold
                                                          srv.request.trajectory, true);
 
-            std::cout << "fraction: " << fraction << std::endl;
+        std::cout << "fraction: " << fraction << std::endl;
 
-            robot_trajectory::RobotTrajectory rt (group.getCurrentState()->getRobotModel(), "ur5_manipulator");
-            // Second get a RobotTrajectory from trajectory
-            rt.setRobotTrajectoryMsg(*group.getCurrentState(), srv.request.trajectory);
+        robot_trajectory::RobotTrajectory rt (group.getCurrentState()->getRobotModel(), "ur5_manipulator");
+        // Second get a RobotTrajectory from trajectory
+        rt.setRobotTrajectoryMsg(*group.getCurrentState(), srv.request.trajectory);
 
-            ROS_INFO_STREAM("Pose reference frame: " << group.getPoseReferenceFrame ());
+        ROS_INFO_STREAM("Pose reference frame: " << group.getPoseReferenceFrame ());
 
-            // Thrid create a IterativeParabolicTimeParameterization object
-            trajectory_processing::IterativeParabolicTimeParameterization iptp;
-            bool success = iptp.computeTimeStamps(rt);
-            ROS_INFO("Computed time stamp %s",success?"SUCCEDED":"FAILED");
+        // Thrid create a IterativeParabolicTimeParameterization object
+        trajectory_processing::IterativeParabolicTimeParameterization iptp;
+        bool success = iptp.computeTimeStamps(rt);
+        ROS_INFO("Computed time stamp %s",success?"SUCCEDED":"FAILED");
 
-            // Get RobotTrajectory_msg from RobotTrajectory
-            rt.getRobotTrajectoryMsg(srv.request.trajectory);
-            // Finally plan and execute the trajectory
-            plan.trajectory_ = srv.request.trajectory;
-            ROS_INFO("Visualizing plan (cartesian path) (%.2f%% acheived)",fraction * 100.0);
+        // Get RobotTrajectory_msg from RobotTrajectory
+        rt.getRobotTrajectoryMsg(srv.request.trajectory);
+        // Finally plan and execute the trajectory
+        plan.trajectory_ = srv.request.trajectory;
+        ROS_INFO("Visualizing plan (cartesian path) (%.2f%% acheived)",fraction * 100.0);
 
-            if (fraction == 1.0) {
-                 group.execute(plan);
-            } else
-            ROS_WARN("Could not compute the cartesian path :( ");
+        if (fraction == 1.0) {
+             group.execute(plan);
+             std::cout << "### Path Planning & Execution finished ###" << std::endl;
+        } else
+        ROS_WARN("Could not compute the cartesian path :( ");
 
-    } */
-
+    }
 };
 
 /**
@@ -264,6 +236,8 @@ class MoveCallback: public LocalServer::Callback<rst::kinematics::JointAngles, v
         group.setJointValueTarget("arm_wrist_3_joint", values[5]);
         // Joint value target execution
         group.move();
+        std::cout << "### Path Planning & Execution finished ###" << std::endl;
+
     }
 
 

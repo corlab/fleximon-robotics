@@ -57,8 +57,9 @@ int main(int /*argc*/, char** /*argv*/) {
     jointAngles->add_angles(-1.57);
     jointAngles->add_angles(0.785);
 
-    remoteServer->call<std::string>("moverobot", jointAngles);
-    std::cout << "Called move!" << std::endl;
+//    remoteServer->call<std::string>("moverobot", jointAngles);
+//    std::cout << "Called move!" << std::endl;
+
     //std::cout << "Server replied: " << *result << std::endl;
 
     // Call the method "echo" without waiting for the call to return a
@@ -69,9 +70,9 @@ int main(int /*argc*/, char** /*argv*/) {
     // received within that time.
     // the respective methods and have to be matched in method calls.
     boost::shared_ptr<rst::geometry::Pose> pose(new rst::geometry::Pose());
-    pose->mutable_translation()->set_x(10);
-    pose->mutable_translation()->set_y(10);
-    pose->mutable_translation()->set_z(10);
+    pose->mutable_translation()->set_x(0.400);
+    pose->mutable_translation()->set_y(0.400);
+    pose->mutable_translation()->set_z(0.400);
     pose->mutable_rotation()->set_qw(0);
     pose->mutable_rotation()->set_qx(0);
     pose->mutable_rotation()->set_qy(0);
