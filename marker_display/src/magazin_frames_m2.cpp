@@ -141,59 +141,60 @@ void frameCallback(const ros::TimerEvent&)
   t.mult(t_temp2,t4);
 
 
-  t.setOrigin(tf::Vector3(0.05605, 0.35957, 0.13617));
+
+  t.setOrigin(tf::Vector3(0.05925, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m3_a"));
 
-  t.setOrigin(tf::Vector3(0.10475, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.10775, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m3_b"));
 
-  t.setOrigin(tf::Vector3(0.15325, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.15625, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m3_c"));
 
-  t.setOrigin(tf::Vector3(0.20175, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.20475, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m3_d"));
 
   // ***************************
 
-  t.setOrigin(tf::Vector3(0.28705 , 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.28925 , 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m2_a"));
 
-  t.setOrigin(tf::Vector3(0.33575, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.33775, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m2_b"));
 
-  t.setOrigin(tf::Vector3(0.38425, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.38625, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m2_c"));
 
-  t.setOrigin(tf::Vector3(0.43275, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.43475, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m2_d"));
 
   // ***************************
 
-  t.setOrigin(tf::Vector3(0.51405 , 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.51925 , 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m5_a"));
 
-  t.setOrigin(tf::Vector3(0.56275, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.56775, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m5_b"));
 
-  t.setOrigin(tf::Vector3(0.61125, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.61625, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m5_c"));
 
-  t.setOrigin(tf::Vector3(0.65975, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.66475, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m5_d"));
 
 
   // ***************************
 
-  t.setOrigin(tf::Vector3(0.74705 , 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.74925 , 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m1_a"));
 
-  t.setOrigin(tf::Vector3(0.79575, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.79775, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m1_b"));
 
-  t.setOrigin(tf::Vector3(0.84425, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.84625, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m1_c"));
 
-  t.setOrigin(tf::Vector3(0.89275, 0.35957, 0.13617));
+  t.setOrigin(tf::Vector3(0.89475, 0.30950, 0.13075));
   br.sendTransform(tf::StampedTransform(t, time, "magazin_frame", "m1_d"));
 
   t.setOrigin(tf::Vector3(p_x, p_y, p_z));
