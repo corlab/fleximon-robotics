@@ -28,7 +28,6 @@ void UR5Move::mainNodeLoop()
         {
         case 0: // Move To Init
                 moveInit();
-
                 ROS_INFO("######### Move to Init! #########");
                 state++;
 
@@ -36,12 +35,16 @@ void UR5Move::mainNodeLoop()
         case 1: // Move To Init
                 if(graspFrame == "/m3_a" || graspFrame == "/m3_b"){
                    ROS_INFO("######### Move to Init2! #########");
+                   currentPose();
                    moveInit2();
+                    currentPose();
                    state++;
                 }
                 else if(graspFrame == "/m3_c" || graspFrame == "/m3_d"){
                    ROS_INFO("######### Move to Init2! #########");
+                   currentPose();
                    moveInit2();
+                   currentPose();
                    state++;
                 }
                 else state++;
@@ -51,6 +54,7 @@ void UR5Move::mainNodeLoop()
             break;
         case 2: //
                 ROS_INFO("######### Move to Magazine! ######### ");
+
                 moveMagazine();
                 state++;
 
@@ -63,7 +67,9 @@ void UR5Move::mainNodeLoop()
             break;
         case 4: //
                 ROS_INFO("######### Move In to Grasp Position! ######### ");
+                currentPose();
                 moveIn();
+                currentPose();
                 state++;
 
             break;
@@ -115,7 +121,17 @@ void UR5Move::mainNodeLoop()
 
 }
 
-
+void UR5Move::currentPose(){
+    ros::Duration(0.5).sleep();
+    std::cout << "###################" << std::endl;
+    move_group_interface::MoveGroup group("ur5_manipulator");
+    // print information about the endeffector
+    std::string ee = group.getEndEffectorLink();
+    ROS_INFO("Endeffector Frame %s",ee.c_str());
+    ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
+    ros::Duration(0.5).sleep();
+    std::cout << "###################" << std::endl;
+}
 
 void UR5Move::moveInit()
 {
