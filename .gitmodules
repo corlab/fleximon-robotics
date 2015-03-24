@@ -1,0 +1,3 @@
+[submodule "fleximon/3rd_party/universal_robot"]
+	path = fleximon/3rd_party/universal_robot
+	url = https://github.com/corlab/universal_robot.git
