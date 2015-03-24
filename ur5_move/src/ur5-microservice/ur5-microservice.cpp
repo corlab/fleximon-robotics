@@ -47,7 +47,7 @@ using namespace rsb;
 using namespace ur5_microservice::library;
 namespace po = boost::program_options;
 
-string scope = "/fleximon/Module1/ur5";
+string scope = "/fleximon/module1/ur5";
 int value = 0;
 
 void handleCommandline(int argc, char *argv[]) {
@@ -77,6 +77,9 @@ void handleCommandline(int argc, char *argv[]) {
     po::notify(vm);
 
     // you can do some additional validity checks here
+
+    // print args
+    cout << "Running on scope: " << scope << endl;
 
 }
 
