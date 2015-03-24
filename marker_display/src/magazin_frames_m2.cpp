@@ -134,7 +134,8 @@ void frameCallback(const ros::TimerEvent&)
   t1.setRotation(tf::createQuaternionFromRPY(3.14, 0, 0));
   t2.setRotation(tf::createQuaternionFromRPY(0, -1.57, 0));
   t3.setRotation(tf::createQuaternionFromRPY(0, 0, 0.436332));
-  t4.setRotation(tf::createQuaternionFromRPY(-2.335, 0, 0));
+  t4.setRotation(tf::createQuaternionFromRPY(3.14, 0, 0));
+//  t4.setRotation(tf::createQuaternionFromRPY(-2.335, 0, 0));
 
   t_temp.mult(t1,t2);
   t_temp2.mult(t_temp,t3);
