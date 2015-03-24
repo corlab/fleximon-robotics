@@ -28,6 +28,7 @@ void UR5Move::mainNodeLoop()
         {
         case 0: // Move To Init
                 moveInit();
+
                 ROS_INFO("######### Move to Init! #########");
                 state++;
 
@@ -35,16 +36,12 @@ void UR5Move::mainNodeLoop()
         case 1: // Move To Init
                 if(graspFrame == "/m3_a" || graspFrame == "/m3_b"){
                    ROS_INFO("######### Move to Init2! #########");
-                   currentPose();
                    moveInit2();
-                    currentPose();
                    state++;
                 }
                 else if(graspFrame == "/m3_c" || graspFrame == "/m3_d"){
                    ROS_INFO("######### Move to Init2! #########");
-                   currentPose();
                    moveInit2();
-                   currentPose();
                    state++;
                 }
                 else state++;
@@ -66,9 +63,7 @@ void UR5Move::mainNodeLoop()
 //            break;
 //        case 4: //
 //                ROS_INFO("######### Move In to Grasp Position! ######### ");
-//                currentPose();
 //                moveIn();
-//                currentPose();
 //                state++;
 
 //            break;
@@ -120,17 +115,7 @@ void UR5Move::mainNodeLoop()
 
 }
 
-void UR5Move::currentPose(){
-    ros::Duration(0.5).sleep();
-    std::cout << "###################" << std::endl;
-    move_group_interface::MoveGroup group("ur5_manipulator");
-    // print information about the endeffector
-    std::string ee = group.getEndEffectorLink();
-    ROS_INFO("Endeffector Frame %s",ee.c_str());
-    ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
-    ros::Duration(0.5).sleep();
-    std::cout << "###################" << std::endl;
-}
+
 
 void UR5Move::moveInit()
 {
@@ -210,90 +195,6 @@ void UR5Move::moveInit2()
 
 
 
-void UR5Move::moveJointPregrasp()
-{
-    // start a background "spinner", so our node can process ROS messages
-    //  - this lets us know when the move is completed
-    ros::AsyncSpinner spinner(1);
-    spinner.start();
-
-    // connecting to move group
-    move_group_interface::MoveGroup group("ur5_manipulator");
-
-    // set planner from OMPL lib
-    group.setPlannerId(setPlanner);
-
-    // print information about the endeffector
-    std::string ee = group.getEndEffectorLink();
-    ROS_INFO("Endeffector Frame %s",ee.c_str());
-    ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
-
-    // allow replanning to increase the odds of a solution
-    group.allowReplanning(true);
-    group.setPlanningTime(5);
-    // set the refrance frame
-    group.setPoseReferenceFrame(referenceFrame);
-
-    // allow some position (meters) and orientation (radians) tolerances
-    group.setGoalPositionTolerance(goalPosTol);
-    group.setGoalOrientationTolerance(goalOrientTol);
-
-    // get the name of the end-effector link
-    std::string end_effector_link = group.getEndEffectorLink();
-
-    group.setJointValueTarget("arm_shoulder_pan_joint", 0.3295);
-    group.setJointValueTarget("arm_shoulder_lift_joint", -1.7383);
-    group.setJointValueTarget("arm_elbow_joint", 1.758);
-    group.setJointValueTarget("arm_wrist_1_joint", -1.7924);
-    group.setJointValueTarget("arm_wrist_2_joint", -1.9579);
-    group.setJointValueTarget("arm_wrist_3_joint", 0.311);
-
-    // Joint value target execution
-    group.move();
-}
-
-void UR5Move::moveJointGrasp()
-{
-    // start a background "spinner", so our node can process ROS messages
-    //  - this lets us know when the move is completed
-    ros::AsyncSpinner spinner(1);
-    spinner.start();
-
-    // connecting to move group
-    move_group_interface::MoveGroup group("ur5_manipulator");
-
-    // set planner from OMPL lib
-    group.setPlannerId(setPlanner);
-
-    // print information about the endeffector
-    std::string ee = group.getEndEffectorLink();
-    ROS_INFO("Endeffector Frame %s",ee.c_str());
-    ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
-
-    // allow replanning to increase the odds of a solution
-    group.allowReplanning(true);
-    group.setPlanningTime(5);
-    // set the refrance frame
-    group.setPoseReferenceFrame(referenceFrame);
-
-    // allow some position (meters) and orientation (radians) tolerances
-    group.setGoalPositionTolerance(goalPosTol);
-    group.setGoalOrientationTolerance(goalOrientTol);
-
-    // get the name of the end-effector link
-    std::string end_effector_link = group.getEndEffectorLink();
-
-    group.setJointValueTarget("arm_shoulder_pan_joint", 0.1177);
-    group.setJointValueTarget("arm_shoulder_lift_joint", -1.4437);
-    group.setJointValueTarget("arm_elbow_joint", 2.129);
-    group.setJointValueTarget("arm_wrist_1_joint", -2.5362);
-    group.setJointValueTarget("arm_wrist_2_joint", -1.9072);
-    group.setJointValueTarget("arm_wrist_3_joint", 0.091);
-
-    // Joint value target execution
-    group.move();
-}
-
 void UR5Move::moveMagazine(){
 
     // connecting to move group
@@ -319,17 +220,6 @@ void UR5Move::moveMagazine(){
 
     // get the name of the end-effector link
     std::string end_effector_link = group.getEndEffectorLink();
-
-    // Transform listener
-      try {
-          listener.waitForTransform(destinationFrame, graspFrame, ros::Time(0), ros::Duration(5.0));
-          listener.lookupTransform(destinationFrame, graspFrame, ros::Time(0), transform);
-      } catch (tf::TransformException ex) {
-          ROS_ERROR("%s",ex.what());
-      }
-
-    std::cout << transform.getOrigin().x() << "," << transform.getOrigin().y() << "," << transform.getOrigin().z() << "," << std::endl;
-
 
     // plan and execute a trajectory to the goal configuration
 
@@ -360,13 +250,13 @@ void UR5Move::moveMagazine(){
 
     // set the next waypoint
     geometry_msgs::Pose cartesian_target;
-    cartesian_target.position.x = start_pose.pose.position.x;
-    cartesian_target.position.y = start_pose.pose.position.y;
-    cartesian_target.position.z = 0;
-    cartesian_target.orientation.x = start_pose.pose.orientation.x;
-    cartesian_target.orientation.y = start_pose.pose.orientation.y;
-    cartesian_target.orientation.z = start_pose.pose.orientation.z;
-    cartesian_target.orientation.w = start_pose.pose.orientation.w;
+    cartesian_target.position.x = 0.787188;
+    cartesian_target.position.y = 0.696682;
+    cartesian_target.position.z = 0.441741;
+    cartesian_target.orientation.x = 0.270665;
+    cartesian_target.orientation.y = 0.653731;
+    cartesian_target.orientation.z = -0.270343;
+    cartesian_target.orientation.w = 0.652909;
     waypoints.push_back(cartesian_target);
 
     // plan the Cartesian path connecting the waypoints
@@ -402,6 +292,13 @@ void UR5Move::moveMagazine(){
              group.execute(plan);
         } else
         ROS_WARN("Could not compute the cartesian path :( ");
+
+        // print information about the endeffector
+        std::string ee1 = group.getEndEffectorLink();
+        ROS_INFO("Endeffector Frame %s",ee1.c_str());
+        ROS_INFO_STREAM("Endeffector POSE Presgrasp" << std::endl << group.getCurrentPose(ee1));
+
+
 
 }
 
@@ -439,7 +336,10 @@ void UR5Move::rotateEndEffector(){
           ROS_ERROR("%s",ex.what());
       }
 
-    std::cout << transform.getOrigin().x() << "," << transform.getOrigin().y() << "," << transform.getOrigin().z() << "," << std::endl;
+    std::cout << "Rotation X: " << transform.getRotation().getX() << std::endl;
+    std::cout << "Rotation Y: " << transform.getRotation().getY() << std::endl;;
+    std::cout << "Rotation Z: " << transform.getRotation().getZ() << std::endl;;
+    std::cout << "Rotation W: " << transform.getRotation().getW() << std::endl;;
 
 
     // plan and execute a trajectory to the goal configuration
@@ -507,6 +407,10 @@ void UR5Move::rotateEndEffector(){
              group.execute(plan);
         } else
         ROS_WARN("Could not compute the cartesian path :( ");
+
+        std::cout << "Translation X: " << transform.getOrigin().x() <<  " Translation Y: " << transform.getOrigin().y() << " Translation Z: " << transform.getOrigin().z() << "," << std::endl;
+        std::cout << "Rotation X: " << transform.getRotation().getX() <<  " Translation Y: " << transform.getRotation().getY() << " Translation Z: " << transform.getRotation().getZ() << " Rotation W: "<< transform.getRotation().getW() << std::endl;
+
 
 }
 
@@ -611,14 +515,19 @@ void UR5Move::moveIn(){
     } else
     ROS_WARN("Could not compute the cartesian path :( ");
 
-    std::vector<double> joint_values = group.getCurrentJointValues();
-    std::cout << "Joint Values: " << joint_values[0] << std::endl;
-    std::cout << "Joint Values: " << joint_values[1] << std::endl;
-    std::cout << "Joint Values: " << joint_values[2] << std::endl;
-    std::cout << "Joint Values: " << joint_values[3] << std::endl;
-    std::cout << "Joint Values: " << joint_values[4] << std::endl;
-    std::cout << "Joint Values: " << joint_values[5] << std::endl;
+//    std::vector<double> joint_values = group.getCurrentJointValues();
+//    std::cout << "Joint Values: " << joint_values[0] << std::endl;
+//    std::cout << "Joint Values: " << joint_values[1] << std::endl;
+//    std::cout << "Joint Values: " << joint_values[2] << std::endl;
+//    std::cout << "Joint Values: " << joint_values[3] << std::endl;
+//    std::cout << "Joint Values: " << joint_values[4] << std::endl;
+//    std::cout << "Joint Values: " << joint_values[5] << std::endl;
 
+
+    // print information about the endeffector
+    std::string ee1 = group.getEndEffectorLink();
+    ROS_INFO("Endeffector Frame %s",ee1.c_str());
+    ROS_INFO_STREAM("Endeffector POSE Grasp" << std::endl << group.getCurrentPose(ee1));
 
 
 }

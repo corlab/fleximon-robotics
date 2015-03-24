@@ -17,7 +17,7 @@
 		    <geometry>
 		      <mesh filename="package://fleximon_data/data/afag_gripper50.dae"/>
 		    </geometry>
-				<origin rpy="0 0 0" xyz="0 0 0"/>
+				<origin rpy="-0.785 0.0 0" xyz="0 0 0"/>
 		    <!--origin rpy="0 0.0 1.57" xyz="0.069 -0.0315 -0.0315"/-->
 				<!--origin rpy="0 -0.785 1.57" xyz="0.069 0.063 -0.0315"/-->
 		  </visual>

@@ -22,7 +22,7 @@
 #define GP_LEN 0.104 // Length ur5 arm_ee joint - Gripper Fingers
 
 // Anfahren Magazin
-#define MG_Z 0.25       // Z-Offset an Magazin
+#define MG_Z 0.25      // Z-Offset an Magazin
 #define MG_ANGLE 25     // Neigungswinkel Magazin in Grad
 
 // Werkstuecktraeger - Charge Carrier
@@ -80,6 +80,7 @@ private:
     void moveJointPrecise();
     void moveWT();
     void moveOut();
+    void currentPose();
 
 
 };

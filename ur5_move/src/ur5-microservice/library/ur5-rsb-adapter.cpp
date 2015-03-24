@@ -92,6 +92,9 @@ public:
                                         boost::shared_ptr<rst::geometry::Pose> input) {
     	std::cout << "MoveCS method called with rst::geometry::pose: Translation (x,y,z): " << input->translation().x() << "," << input->translation().y() << "," << input->translation().z() << " ";
     	std::cout << " Rotation (qx,qy,qz,qw): " << input->rotation().qx() << "," << input->rotation().qy() << "," << input->rotation().qz() << "," << input->rotation().qw() << std::endl;
+        move(input);
+    }
+    bool move(boost::shared_ptr<rst::geometry::Pose> input){
 
         // connecting to move group
         move_group_interface::MoveGroup group("ur5_manipulator");
@@ -142,10 +145,10 @@ public:
         cartesian_target.position.x = input->translation().x();
         cartesian_target.position.y = input->translation().y();
         cartesian_target.position.z = input->translation().z();
-        cartesian_target.orientation.x = start_pose.pose.orientation.x;
-        cartesian_target.orientation.y = start_pose.pose.orientation.y;
-        cartesian_target.orientation.z = start_pose.pose.orientation.z;
-        cartesian_target.orientation.w = start_pose.pose.orientation.w;
+        cartesian_target.orientation.x = input->rotation().qx();
+        cartesian_target.orientation.y = input->rotation().qy();
+        cartesian_target.orientation.z = input->rotation().qz();
+        cartesian_target.orientation.w = input->rotation().qw();
         waypoints.push_back(cartesian_target);
 
         // plan the Cartesian path connecting the waypoints
@@ -154,7 +157,7 @@ public:
         group.setPlanningTime(5);
 
         double fraction = group.computeCartesianPath(waypoints,
-                                                         0.01, // eef_step
+                                                         0.001, // eef_step
                                                          0.0, // jump_threshold
                                                          srv.request.trajectory, true);
 
@@ -182,6 +185,67 @@ public:
              std::cout << "### Path Planning & Execution finished ###" << std::endl;
         } else
         ROS_WARN("Could not compute the cartesian path :( ");
+
+        /*
+        // start a background "spinner", so our node can process ROS messages
+        //  - this lets us know when the move is completed
+        ros::AsyncSpinner spinner(1);
+        spinner.start();
+        move_group_interface::MoveGroup group("ur5_manipulator");
+        // set planner from OMPL lib
+        group.setPlannerId("PRMkConfigDefault");
+
+        // print information about the endeffector
+        std::string ee = group.getEndEffectorLink();
+        ROS_INFO("Endeffector Frame %s",ee.c_str());
+        ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
+
+        // allow replanning to increase the odds of a solution
+        group.allowReplanning(true);
+        group.setPlanningTime(5);
+        // set the refrance frame
+        group.setPoseReferenceFrame("base_link");
+
+        // allow some position (meters) and orientation (radians) tolerances
+        group.setGoalPositionTolerance(goalPosTol);
+        group.setGoalOrientationTolerance(goalOrientTol);
+
+        // get the name of the end-effector link
+        std::string end_effector_link = group.getEndEffectorLink();
+
+        // plan and execute a trajectory to the goal configuration
+        // get the current pose so we can add it as a waypoint
+        geometry_msgs::PoseStamped start_pose;
+        start_pose = group.getCurrentPose(end_effector_link);
+        ROS_INFO_STREAM("Start Pose: " << std::endl << start_pose);
+        robot_state::RobotState start_state(*group.getCurrentState());
+        group.setStartState(start_state);
+
+        // Planning to a Pose goal
+        // ^^^^^^^^^^^^^^^^^^^^^^^
+        // We can plan a motion for this group to a desired pose for the
+        // end-effector.
+        geometry_msgs::Pose target_pose1;
+
+        target_pose1.position.x = input->translation().x();
+        target_pose1.position.y = input->translation().y();
+        target_pose1.position.z = input->translation().z();
+        target_pose1.orientation.x = input->rotation().qx();
+        target_pose1.orientation.y = input->rotation().qy();
+        target_pose1.orientation.z = input->rotation().qz();
+        target_pose1.orientation.w = input->rotation().qw();
+        group.setPoseTarget(target_pose1);
+
+        // Now, we call the planner to compute the plan
+        // and visualize it.
+        // Note that we are just planning, not asking move_group
+        // to actually move the robot.
+//        group.move();
+        moveit::planning_interface::MoveGroup::Plan my_plan;
+        bool success = group.plan(my_plan);
+        group.execute(my_plan);
+        */
+        return success;
 
     }
 };
@@ -217,6 +281,8 @@ class MoveCallback: public LocalServer::Callback<rst::kinematics::JointAngles, v
         std::string ee = group.getEndEffectorLink();
         ROS_INFO("Endeffector Frame %s",ee.c_str());
         ROS_INFO_STREAM("Endeffector POSE" << std::endl << group.getCurrentPose(ee));
+        robot_state::RobotState start_state(*group.getCurrentState());
+        group.setStartState(start_state);
 
         // allow replanning to increase the odds of a solution
         group.allowReplanning(true);
