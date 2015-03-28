@@ -105,6 +105,9 @@ include_directories(
 ## Declare a cpp executable
 add_executable(marker_display_node src/marker_display_node.cpp)
 add_executable(magazin_frames_m2 src/magazin_frames_m2.cpp)
+add_executable(quat_calc src/quat_calc.cpp)
+
+
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
@@ -116,6 +119,10 @@ add_executable(magazin_frames_m2 src/magazin_frames_m2.cpp)
  )
 
  target_link_libraries(magazin_frames_m2
+   ${catkin_LIBRARIES}
+ )
+
+ target_link_libraries(quat_calc
    ${catkin_LIBRARIES}
  )
 
