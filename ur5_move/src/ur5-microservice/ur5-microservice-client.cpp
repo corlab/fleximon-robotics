@@ -43,7 +43,7 @@ int main(int /*argc*/, char** /*argv*/) {
     // server at scope /example/server.
     Factory& factory = getFactory();
     RemoteServerPtr remoteServer
-        = factory.createRemoteServer("/fleximon/Module1/ur5");
+        = factory.createRemoteServer("/fleximon/module1/ur5");
 
     // Call the method "echo", passing it a string value as argument
     // and accepting a string value as result. Note that the types of
@@ -78,12 +78,16 @@ int main(int /*argc*/, char** /*argv*/) {
     pose->mutable_rotation()->set_qy(0);
     pose->mutable_rotation()->set_qz(0);
 
-    RemoteServer::DataFuture<std::string> future
-        = remoteServer->callAsync<std::string>("movetorobot", pose);
-    std::cout << "Called moveToRobot" << std::endl;
+//    RemoteServer::DataFuture<std::string> future
+ //       = remoteServer->callAsync<std::string>("movetorobot", pose);
+  //  std::cout << "Called moveToRobot" << std::endl;
 
     // We could do something else here while the server processes the
     // call.
+
+    pose = remoteServer->call<rst::geometry::Pose>("queryrobotpose");
+    std::cout << "QueryPose returned rst::geometry::pose: Translation (x,y,z): " << pose->translation().x() << "," << pose->translation().y() << "," << pose->translation().z() << " ";
+    std::cout << " Rotation (qx,qy,qz,qw): " << pose->rotation().qx() << "," << pose->rotation().qy() << "," << pose->rotation().qz() << "," << pose->rotation().qw() << std::endl;
 
     //std::cout << "Server replied: " << *future.get(10.0) << std::endl;
     // Note: timeout is in seconds.

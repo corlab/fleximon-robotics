@@ -81,6 +81,33 @@ using namespace rsb::patterns;
 namespace ur5_microservice {
 namespace library {
 
+
+class QueryPoseCallback: public LocalServer::Callback<void, rst::geometry::Pose> {
+public:
+    boost::shared_ptr<rst::geometry::Pose> call(const std::string& /*methodName*/) {
+        std::cout << "QueryPose method called..." << std::endl;
+        tf::TransformListener listener;
+        tf::StampedTransform transform;
+        try {
+          listener.lookupTransform("/arm_afag_gripper_link", "/base_link",ros::Time(0), transform);
+          boost::shared_ptr<rst::geometry::Pose> pose(new rst::geometry::Pose());
+          pose->mutable_translation()->set_x(transform.getOrigin().x());
+          pose->mutable_translation()->set_y(transform.getOrigin().y());
+          pose->mutable_translation()->set_z(transform.getOrigin().z());
+          pose->mutable_rotation()->set_qx(transform.getRotation().x());
+          pose->mutable_rotation()->set_qy(transform.getRotation().y());
+          pose->mutable_rotation()->set_qz(transform.getRotation().z());
+          pose->mutable_rotation()->set_qw(transform.getRotation().w());
+          std::cout << "QueryPose will return rst::geometry::pose: Translation (x,y,z): " << pose->translation().x() << "," << pose->translation().y() << "," << pose->translation().z() << " ";
+          std::cout << " Rotation (qx,qy,qz,qw): " << pose->rotation().qx() << "," << pose->rotation().qy() << "," << pose->rotation().qz() << "," << pose->rotation().qw() << std::endl;
+          return pose;
+        } catch (tf::TransformException ex){
+            ROS_WARN("%s",ex.what());
+            throw;
+        }
+    }
+};
+
 /**
  * Move in Cartesian space towards a desired target position using
  * planning+IK features of respective backend.
@@ -318,6 +345,7 @@ UR5RSBAdapter::UR5RSBAdapter(const std::string& scope) {
     // Register method with name and implementing callback object.
     server->registerMethod("moverobot", LocalServer::CallbackPtr(new MoveCallback()));
     server->registerMethod("movetorobot", LocalServer::CallbackPtr(new MoveToCallback()));
+    server->registerMethod("queryrobotpose", LocalServer::CallbackPtr(new QueryPoseCallback()));
 }
 
 UR5RSBAdapter::~UR5RSBAdapter() {
