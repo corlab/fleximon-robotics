@@ -56,7 +56,7 @@
 #include <moveit/robot_model_loader/robot_model_loader.h>
 #include <moveit/robot_model/robot_model.h>
 #include <moveit/robot_state/robot_state.h>
-
+#include <ur_msgs/SetTeachIn.h>
 #include <moveit_msgs/ExecuteKnownTrajectory.h>
 #include <moveit/robot_trajectory/robot_trajectory.h>
 #include <moveit/trajectory_processing/iterative_time_parameterization.h>
@@ -81,6 +81,19 @@ using namespace rsb::patterns;
 namespace ur5_microservice {
 namespace library {
 
+class SetTeachInCallback: public LocalServer::Callback<bool, void> {
+public:
+    void call(const std::string& /*methodName*/, boost::shared_ptr<bool> input) {
+        std::cout << "SetTeachIn method called..." << std::endl;
+        ros::NodeHandle n;
+        ros::ServiceClient client = n.serviceClient<ur_msgs::SetTeachIn>("ur_driver/setTeachIn");
+        ur_msgs::SetTeachIn srv;
+        srv.request.active = *input;
+        std::cout << "Call of SetTeachIn." << std::endl;
+        client.call(srv);
+        std::cout << "Reached end of SetTeachIn." << std::endl;
+    }
+};
 
 class QueryPoseCallback: public LocalServer::Callback<void, rst::geometry::Pose> {
 public:
@@ -347,6 +360,7 @@ UR5RSBAdapter::UR5RSBAdapter(const std::string& scope) {
     server->registerMethod("moverobot", LocalServer::CallbackPtr(new MoveCallback()));
     server->registerMethod("movetorobot", LocalServer::CallbackPtr(new MoveToCallback()));
     server->registerMethod("queryrobotpose", LocalServer::CallbackPtr(new QueryPoseCallback()));
+    server->registerMethod("setteachin", LocalServer::CallbackPtr(new SetTeachInCallback()));
 }
 
 UR5RSBAdapter::~UR5RSBAdapter() {
