@@ -89,7 +89,8 @@ public:
         tf::TransformListener listener;
         tf::StampedTransform transform;
         try {
-          listener.lookupTransform("/arm_afag_gripper_link", "/base_link",ros::Time(0), transform);
+          listener.waitForTransform("/base_link", "/arm_afag_gripper_link", ros::Time(0), ros::Duration(5.0));
+          listener.lookupTransform("/base_link", "/arm_afag_gripper_link", ros::Time(0), transform);
           boost::shared_ptr<rst::geometry::Pose> pose(new rst::geometry::Pose());
           pose->mutable_translation()->set_x(transform.getOrigin().x());
           pose->mutable_translation()->set_y(transform.getOrigin().y());
